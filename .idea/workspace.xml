@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf88daa9-5025-44be-9aba-cc32fd363353" name="Changes" comment="Initial release: McCabe-Thiele distillation diagram generator&#10;&#10;- Interactive Streamlit app for binary distillation analysis&#10;- Equilibrium curve from constant alpha or uploaded VLE data&#10;- McCabe-Thiele stepping algorithm with feed tray identification&#10;- Fenske minimum stages and Kirkbride feed tray location&#10;- Minimum reflux calculation and visual reference line&#10;- Total/partial condenser and reboiler stage credit handling" />
+    <list default="true" id="cf88daa9-5025-44be-9aba-cc32fd363353" name="Changes" comment="Initial release: McCabe-Thiele distillation diagram generator&#10;&#10;- Interactive Streamlit app for binary distillation analysis&#10;- Equilibrium curve from constant alpha or uploaded VLE data&#10;- McCabe-Thiele stepping algorithm with feed tray identification&#10;- Fenske minimum stages and Kirkbride feed tray location&#10;- Minimum reflux calculation and visual reference line&#10;- Total/partial condenser and reboiler stage credit handling">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist_formulas.py" beforeDir="false" afterPath="$PROJECT_DIR$/dist_formulas.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist_plots.py" beforeDir="false" afterPath="$PROJECT_DIR$/dist_plots.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,12 +26,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/RHorsley80/distillation_project.git",
-    "accountId": "31db7d62-df31-4f98-971d-50bb8dd1f757"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;RHorsley80&quot;
   }
-}]]></component>
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/RHorsley80/distillation_project.git&quot;,
+    &quot;accountId&quot;: &quot;31db7d62-df31-4f98-971d-50bb8dd1f757&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -43,7 +55,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;
   }
 }</component>
   <component name="SharedIndexes">
@@ -69,7 +81,15 @@
       <option name="project" value="LOCAL" />
       <updated>1774239376051</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Initial release: McCabe-Thiele distillation diagram generator&#10;&#10;- Interactive Streamlit app for binary distillation analysis&#10;- Equilibrium curve from constant alpha or uploaded VLE data&#10;- McCabe-Thiele stepping algorithm with feed tray identification&#10;- Fenske minimum stages and Kirkbride feed tray location&#10;- Minimum reflux calculation and visual reference line&#10;- Total/partial condenser and reboiler stage credit handling">
+      <option name="closed" value="true" />
+      <created>1774239746109</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1774239746109</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

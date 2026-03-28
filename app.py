@@ -3,6 +3,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 from dist_plots import plot_mccabe_thiele, build_equilibrium_callable
 import pandas as pd
+import io as io
 from dist_formulas import (
     describe_feed_condition,
     calc_feedline_equilibrium_intersection,
@@ -97,6 +98,20 @@ dist_molar_drawrate = st.sidebar.number_input(
 bottoms_molar_drawrate = st.sidebar.number_input(
     "Bottoms molar draw rate (B)", min_value=0.01, value=1.0)
 
+st.sidebar.header("Tray Efficiency")
+murphree_efficiency = st.sidebar.slider(
+    "Murphree Tray Efficiency (%)",
+    min_value=10,
+    max_value=100,
+    value=100,
+    step=5
+) / 100.0  # convert to decimal
+st.sidebar.caption(
+    f"Efficiency = {murphree_efficiency:.0%}. "
+    "At 100%, stages are theoretical. Below 100%, "
+    "actual trays required will exceed theoretical stages."
+)
+
 # --- Pre-calculate R_min for validation (constant alpha path only) ---
 r_min_check = None
 if data_source == "Constant alpha" and alpha_values is not None:
@@ -125,7 +140,8 @@ results = plot_mccabe_thiele(
     alpha=alpha_values if data_source == "Constant alpha" else None,
     equil_func=equil_func,
     condenser_type=condenser_type,
-    reboiler_type=reboiler_type
+    reboiler_type=reboiler_type,
+    murphree_efficiency=murphree_efficiency
 )
 
 # --- Display diagram ---
@@ -141,6 +157,12 @@ col2.metric("y_I", f"{results['y_i']:.4f}")
 st.subheader("Minimum Reflux")
 if data_source == "Constant alpha" and results['r_min'] is not None:
     st.metric("R_min", f"{results['r_min']:.4f}")
+    if murphree_efficiency < 1.0:
+        st.caption(
+            "R_min is calculated from the true equilibrium curve and represents "
+            "the thermodynamic minimum reflux for infinite theoretical stages. "
+            "It is independent of Murphree tray efficiency."
+        )
 else:
     st.info("R_min not available — requires constant alpha input.")
 
@@ -151,6 +173,18 @@ col1.metric("Total Stages", results["total_stages"])
 col2.metric("Feed Stage", results["feed_stage"])
 col3.metric("Rectifying Stages", results["rectifying_stages"])
 col4.metric("Stripping Stages", results["stripping_stages"])
+
+if murphree_efficiency < 1.0:
+    st.subheader("Actual Trays (Murphree Efficiency Applied)")
+    actual_trays = results["total_stages"]  # stepper already used pseudo-curve
+    col1, col2 = st.columns(2)
+    col1.metric("Murphree Efficiency", f"{murphree_efficiency:.0%}")
+    col2.metric("Actual Trays Required", actual_trays)
+    st.caption(
+        "Actual tray count reflects Murphree efficiency applied to the "
+        "pseudo-equilibrium curve. Compare to theoretical stages above "
+        "to see the impact of tray efficiency on column design."
+    )
 
 # --- Fenske Minimum Stages ---
 st.subheader("Fenske Equation (Minimum Stages at Total Reflux)")
@@ -198,3 +232,50 @@ try:
                 f"{kirkbride_counts['N_S']:.1f}")
 except ValueError as e:
     st.warning(f"Kirkbride calculation not available: {e}")
+
+# --- Export Section ---
+st.subheader("Export")
+col1, col2 = st.columns(2)
+
+# PNG export
+buf = io.BytesIO()
+fig.savefig(buf, format="png", dpi=150, bbox_inches="tight")
+buf.seek(0)
+col1.download_button(
+    label="Download Diagram (PNG)",
+    data=buf,
+    file_name="mccabe_thiele_diagram.png",
+    mime="image/png"
+)
+
+# CSV export of results
+import csv
+
+results_data = {
+    "Parameter": [
+        "x_D", "x_B", "z_F", "f", "Reflux Ratio",
+        "R_min", "x_I", "y_I",
+        "Total Stages", "Feed Stage",
+        "Rectifying Stages", "Stripping Stages",
+        "Murphree Efficiency"
+    ],
+    "Value": [
+        x_d, x_b, z_f, f, reflux_ratio,
+        results['r_min'] if results['r_min'] is not None else "N/A",
+        results['x_i'], results['y_i'],
+        results['total_stages'], results['feed_stage'],
+        results['rectifying_stages'], results['stripping_stages'],
+        f"{murphree_efficiency:.0%}"
+    ]
+}
+
+results_df = pd.DataFrame(results_data)
+csv_buffer = io.StringIO()
+results_df.to_csv(csv_buffer, index=False)
+
+col2.download_button(
+    label="Download Results (CSV)",
+    data=csv_buffer.getvalue(),
+    file_name="mccabe_thiele_results.csv",
+    mime="text/csv"
+)

@@ -9,7 +9,9 @@ from dist_formulas import (
     calc_operating_feedline_intersection,
     calc_feedline_equilibrium_intersection,
     calc_minimum_reflux,
-    run_mccabe_thiele_stepper        # add this
+    run_mccabe_thiele_stepper,
+    calc_murphree_pseudo_equilibrium,
+    build_pseudo_equil_callable
 )
 
 def build_equilibrium_callable(x_data=None, y_data=None, alpha=None):
@@ -83,6 +85,7 @@ def build_equilibrium_callable(x_data=None, y_data=None, alpha=None):
     else:
         raise ValueError("Must provide either x_data/y_data or alpha.")
 
+
 def plot_equilibrium_curve(ax, equil_func, n_points=200):
         """
         Plots the equilibrium curve on the provided axes.
@@ -98,6 +101,23 @@ def plot_equilibrium_curve(ax, equil_func, n_points=200):
         x_vals = np.linspace(0, 1, n_points)
         y_vals = equil_func(x_vals)
         ax.plot(x_vals, y_vals, color="blue", linewidth=1.5, label="Equilibrium curve")
+
+def plot_pseudo_equilibrium_curve(ax, x_vals, y_pseudo):
+    """
+    Plots the Murphree pseudo-equilibrium curve on the provided axes.
+    Sits between the operating lines and the true equilibrium curve,
+    representing actual separation achieved per tray.
+
+    Parameters
+    ----------
+    ax : matplotlib Axes
+    x_vals : array
+        x values from calc_murphree_pseudo_equilibrium.
+    y_pseudo : array
+        y values from calc_murphree_pseudo_equilibrium.
+    """
+    ax.plot(x_vals, y_pseudo, color="purple", linewidth=1.0,
+            linestyle="--", label="Pseudo-equilibrium curve")
 
 def plot_diagonal(ax):
     """
@@ -222,7 +242,8 @@ def plot_minimum_reflux_line(ax, x_d, x_prime, y_prime):
 def plot_mccabe_thiele(ax, x_d, x_b, f, z_f, reflux_ratio,
                            alpha, equil_func,
                            condenser_type="total",
-                           reboiler_type="partial"):
+                           reboiler_type="partial",
+                           murphree_efficiency=1.0):
     """
     Coordinator function for the McCabe-Thiele diagram.
     Calls individual plot functions in dependency order and passes
@@ -281,12 +302,31 @@ def plot_mccabe_thiele(ax, x_d, x_b, f, z_f, reflux_ratio,
     # --- Layer 5: Stripping OL, anchored to intersection and x_B ---
     strip_slope, strip_x_int = plot_stripping_operating_line(ax, x_b, x_i, y_i)
 
-    # --- Layer 6: Stepper ---
+    # --- Layer 5b: Murphree pseudo-equilibrium curve ---
+    def rect_ol_func(x):
+        return rect_slope * x + rect_y_int
+
+    def strip_ol_func(x):
+        return strip_slope * (x - x_b) + x_b
+
+    if murphree_efficiency < 1.0:
+        x_pseudo, y_pseudo = calc_murphree_pseudo_equilibrium(
+            equil_func, rect_ol_func, strip_ol_func,
+            x_i, murphree_efficiency
+        )
+        pseudo_callable = build_pseudo_equil_callable(x_pseudo, y_pseudo)
+        plot_pseudo_equilibrium_curve(ax, x_pseudo, y_pseudo)
+        active_equil_func = pseudo_callable
+    else:
+        active_equil_func = equil_func
+
+    # --- Layer 6: Stepper --- uses active_equil_func, not equil_func directly
     stepper_results = run_mccabe_thiele_stepper(
         x_d, x_b, f, z_f,
         rect_slope, rect_y_int,
         strip_slope, x_b,
-        equil_func, x_i,
+        active_equil_func,  # ← pseudo-curve when efficiency < 1, else true curve
+        x_i,
         condenser_type=condenser_type,
         reboiler_type=reboiler_type
     )

@@ -1,5 +1,6 @@
 import numpy as np
 import warnings
+from scipy.interpolate import CubicSpline
 
 def calc_rel_volatility_alpha(mole_frac_in_vapor, mole_frac_in_liquid):
     #Flag errors.
@@ -563,3 +564,53 @@ def run_mccabe_thiele_stepper(x_d, x_b, f, z_f, rect_slope, rect_y_int,
             "rectifying_stages" : rect_stages,
             "stripping_stages"  : strip_stages,
         }
+
+def calc_murphree_pseudo_equilibrium(equil_func, rect_ol_func, strip_ol_func,
+                                     x_i, murphree_efficiency, n_points=200):
+    """
+    ...same docstring with updated parameters...
+
+    Parameters
+    ----------
+    rect_ol_func : callable
+        Rectifying operating line function.
+    strip_ol_func : callable
+        Stripping operating line function.
+    x_i : float
+        x-coordinate of operating line intersection — determines which
+        operating line is active at each x value.
+    """
+    if not 0 < murphree_efficiency <= 1:
+        raise ValueError("Murphree efficiency must be between 0 (exclusive) and 1 (inclusive).")
+
+    x_vals = np.linspace(0, 1, n_points)
+    y_equil = np.array([equil_func(x) for x in x_vals])
+
+    # Apply active operating line at each x value
+    y_ol = np.array([
+        rect_ol_func(x) if x >= x_i else strip_ol_func(x)
+        for x in x_vals
+    ])
+
+    y_pseudo = y_ol + murphree_efficiency * (y_equil - y_ol)
+
+    return x_vals, y_pseudo
+
+def build_pseudo_equil_callable(x_vals, y_pseudo):
+    """
+    Wraps the Murphree pseudo-equilibrium curve arrays into a callable
+    for use by the stepper.
+
+    Parameters
+    ----------
+    x_vals : array
+        x values from calc_murphree_pseudo_equilibrium.
+    y_pseudo : array
+        y values from calc_murphree_pseudo_equilibrium.
+
+    Returns
+    -------
+    callable
+        Function that takes x and returns y on the pseudo-equilibrium curve.
+    """
+    return CubicSpline(x_vals, y_pseudo)

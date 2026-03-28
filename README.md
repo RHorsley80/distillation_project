@@ -77,8 +77,6 @@ dist_visuals.py    — Placeholder for future column schematic visualization
 
 ## Potential Future Functionality
 
-- **Murphree tray efficiency** — scale theoretical stages to actual trays 
-  using per-tray efficiency factors
 - **Column schematic visualization** — dynamic SVG diagram showing feed, 
   condenser, reboiler, and stream compositions (`dist_visuals.py`)
 - **Thermodynamic feed condition calculation** — compute f from feed 
