@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf88daa9-5025-44be-9aba-cc32fd363353" name="Changes" comment="Initial release: McCabe-Thiele distillation diagram generator&#10;&#10;- Interactive Streamlit app for binary distillation analysis&#10;- Equilibrium curve from constant alpha or uploaded VLE data&#10;- McCabe-Thiele stepping algorithm with feed tray identification&#10;- Fenske minimum stages and Kirkbride feed tray location&#10;- Minimum reflux calculation and visual reference line&#10;- Total/partial condenser and reboiler stage credit handling">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist_formulas.py" beforeDir="false" afterPath="$PROJECT_DIR$/dist_formulas.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist_plots.py" beforeDir="false" afterPath="$PROJECT_DIR$/dist_plots.py" afterDir="false" />
-    </list>
+    <list default="true" id="cf88daa9-5025-44be-9aba-cc32fd363353" name="Changes" comment="Initial release: McCabe-Thiele distillation diagram generator&#10;&#10;- Interactive Streamlit app for binary distillation analysis&#10;- Equilibrium curve from constant alpha or uploaded VLE data&#10;- McCabe-Thiele stepping algorithm with feed tray identification&#10;- Fenske minimum stages and Kirkbride feed tray location&#10;- Minimum reflux calculation and visual reference line&#10;- Total/partial condenser and reboiler stage credit handling" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
